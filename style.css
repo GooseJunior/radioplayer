@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e1e2f, #0f0c1b);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+.player-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    text-align: center;
+    width: 300px;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+#status {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    margin-bottom: 25px;
+}
+
+button {
+    background: #1db954; /* Spotify green */
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    width: 100%;
+}
+
+button:hover {
+    background: #1ed760;
+    transform: scale(1.03);
+}
+
+.volume-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+input[type="range"] {
+    accent-color: #1db954;
+    cursor: pointer;
+}
