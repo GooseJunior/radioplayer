@@ -1,68 +1,53 @@
-/* Now Playing Metadata styling */
-.now-playing-container {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 15px;
+/* Album Art Styling */
+.album-art-wrapper {
+    width: 100%;
+    margin-bottom: 15px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.meta-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #1db954;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
+#album-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: src 0.5s ease-in-out;
 }
 
-#track-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 2px;
-}
-
-#artist-name {
-    font-size: 0.9rem;
-    color: #b3b3b3;
-}
-
-/* History styling */
-.history-container {
-    margin-top: 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 15px;
-    text-align: left;
-}
-
-.history-container h3 {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    color: #b3b3b3;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-}
-
-#history-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 120px;
-    overflow-y: auto;
-}
-
+/* Updated History List Items with Images */
 #history-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-size: 0.85rem;
-    padding: 6px 0;
+    padding: 8px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     color: #e0e0e0;
 }
 
-#history-list li:first-child {
-    color: #fff; /* Highlight the most recent past song */
+.history-art {
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    object-fit: cover;
+    background-color: #333;
 }
 
-.empty-history {
-    color: #666 !important;
-    font-style: italic;
+.history-details {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-title {
+    font-weight: bold;
+    color: #fff;
+}
+
+.history-artist {
+    font-size: 0.75rem;
+    color: #b3b3b3;
 }
