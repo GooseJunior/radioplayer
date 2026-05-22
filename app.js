@@ -99,8 +99,8 @@ async function fetchMetadata() {
 function renderHistoryGrid(historyArray) {
     historyGrid.innerHTML = '';
     
-    // Take up to 15 items max
-    const displayList = historyArray.slice(0, 15);
+    // Take up to 5 items max
+    const displayList = historyArray.slice(0, 5);
 
     // If API returns fewer items, fill up empty cells to keep styling structure consistent
     while(displayList.length < 5) {
