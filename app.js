@@ -21,7 +21,7 @@ const closeModalBtn = document.getElementById('close-modal-btn');
 const fullHistoryList = document.getElementById('full-history-list');
 
 const DEFAULT_ART = "https://placehold.co/400x400/999/fff?text=90.3 WJCE";
-const API_URL = "https://c.aiircdn.com/player/css/dist/player-239c80f145.min.css"; 
+const API_URL = "https://demo.azuracast.com/api/nowplaying"; 
 
 let isPlaying = false;
 
