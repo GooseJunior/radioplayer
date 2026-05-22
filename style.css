@@ -1,64 +1,68 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1e1e2f, #0f0c1b);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
+/* Now Playing Metadata styling */
+.now-playing-container {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
-.player-container {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    text-align: center;
-    width: 300px;
-}
-
-h1 {
-    font-size: 1.5rem;
+.meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #1db954;
+    font-weight: bold;
+    display: block;
     margin-bottom: 5px;
 }
 
-#status {
-    font-size: 0.9rem;
-    color: #b3b3b3;
-    margin-bottom: 25px;
-}
-
-button {
-    background: #1db954; /* Spotify green */
-    border: none;
-    color: white;
-    padding: 12px 30px;
+#track-title {
     font-size: 1.1rem;
     font-weight: bold;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-    width: 100%;
+    margin-bottom: 2px;
 }
 
-button:hover {
-    background: #1ed760;
-    transform: scale(1.03);
+#artist-name {
+    font-size: 0.9rem;
+    color: #b3b3b3;
 }
 
-.volume-container {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+/* History styling */
+.history-container {
+    margin-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    text-align: left;
 }
 
-input[type="range"] {
-    accent-color: #1db954;
-    cursor: pointer;
+.history-container h3 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #b3b3b3;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+#history-list li {
+    font-size: 0.85rem;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e0e0e0;
+}
+
+#history-list li:first-child {
+    color: #fff; /* Highlight the most recent past song */
+}
+
+.empty-history {
+    color: #666 !important;
+    font-style: italic;
 }
