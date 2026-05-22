@@ -74,8 +74,8 @@ async function fetchMetadata() {
         const history = data.song_history || [];
 
         // Update main and bottom layouts concurrently
-        const titleText = current.title || "All The Best Country 99.9 WJVL";
-        const artistText = current.artist || "WJVL";
+        const titleText = current.title || "All Your Favorite Country Music";
+        const artistText = current.artist || "90.3 WJCE";
         const artUrl = current.art || DEFAULT_ART;
 
         trackTitle.innerText = titleText;
@@ -99,8 +99,8 @@ async function fetchMetadata() {
 function renderHistoryGrid(historyArray) {
     historyGrid.innerHTML = '';
     
-    // Take up to 5 items max
-    const displayList = historyArray.slice(0, 5);
+    // Take up to 15 items max
+    const displayList = historyArray.slice(0, 15);
 
     // If API returns fewer items, fill up empty cells to keep styling structure consistent
     while(displayList.length < 5) {
