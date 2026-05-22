@@ -3,44 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>90.3 WJCE - Listen Live</title>
+    <title>90.3 WCJE - Listen Live</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="player-container">
-        <h1 id="station-title">All Your Favorite Country Songs, Commercial Free! On 90.3 WJCE</h1>
-        <p id="status">Status: Paused</p>
-
-        <div class="now-playing-container">
-            <div class="album-art-wrapper">
-                <img id="album-art" src="https://placehold.co/300x300/1e1e2f/ffffff?text=Radio" alt="Album Art">
-            </div>
-            <span class="meta-label">NOW PLAYING:</span>
-            <div id="track-title">Loading track info...</div>
-            <div id="artist-name"></div>
-        </div>
-
-        <audio id="radio-audio" preload="none">
-            <source src="https://stream-02.aiir.com/xvs92xikunwtv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ4dnM5Mnhpa3Vud3R2IiwiaG9zdCI6InN0cmVhbS0wMi5haWlyLmNvbSIsInJ0dGwiOjUsImp0aSI6Imt0M0NyQ0g1UlZTZV95U2ZKVEphZlEiLCJpYXQiOjE3Nzk0MTEzNDEsImV4cCI6MTc3OTQxMTQwMX0.dmBCu0WiLCJ9KUtUWaGJnwD1HOXtdxlfaZTuFrQ3YlU" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-
-        <div class="controls">
-            <button id="play-btn">▶ Play</button>
-            <div class="volume-container">
-                <label for="volume-slider">🔊</label>
-                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.8">
+    <header class="hero-section">
+        <div class="hero-left">
+            <img src="https://wjvl.com/wp-content/uploads/2021/04/wjvl-logo-300.png" alt="WJVL Logo" class="station-logo">
+            <div class="hero-controls">
+                <button id="hero-play-btn" class="circle-play-btn">▶</button>
+                <div class="hero-status-text">
+                    <span class="sub-label">On Air Now:</span>
+                    <span class="station-name">All Your Favorite Country Songs, 90.3 WJCE</span>
+                </div>
             </div>
         </div>
+        
+        <div class="hero-right">
+            <div class="now-playing-card">
+                <img id="album-art" src="https://placehold.co/400x400/999/fff?text=WJVL" alt="Current Album Art">
+                <div class="card-overlay">
+                    <div id="track-title" class="overlay-title">All The Best Country 99.9 WJVL</div>
+                    <div id="artist-name" class="overlay-artist">WJVL</div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        <div class="history-container">
-            <h3>Recently Played</h3>
-            <ul id="history-list">
-                <li class="empty-history">No history available yet</li>
-            </ul>
+    <main class="history-section">
+        <div class="history-header">
+            <h2>Previously Played</h2>
+            <button id="view-all-btn">View Full History</button>
+        </div>
+        
+        <div id="history-grid" class="history-grid"></div>
+    </main>
+
+    <footer class="sticky-player-bar">
+        <div class="mini-player-info">
+            <button id="bar-play-btn" class="mini-play-btn">▶</button>
+            <img id="bar-album-art" src="https://placehold.co/50x50/999/fff?text=WJVL" alt="Mini Art" class="mini-art">
+            <div class="mini-text">
+                <div id="bar-track-title" class="mini-title">All The Best Country 99.9 WJVL</div>
+                <div id="bar-artist-name" class="mini-artist">WJVL</div>
+            </div>
+        </div>
+        
+        <div class="mini-player-controls">
+            <span class="volume-icon">🔊</span>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.8">
+        </div>
+    </footer>
+
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Song History</h3>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
+            </div>
+            <ul id="full-history-list">
+                </ul>
         </div>
     </div>
+
+    <audio id="radio-audio" preload="none">
+        <source src="https://your-stream-url-here.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="app.js"></script>
 </body>
