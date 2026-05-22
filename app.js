@@ -3,18 +3,20 @@ const playBtn = document.getElementById('play-btn');
 const volumeSlider = document.getElementById('volume-slider');
 const statusText = document.getElementById('status');
 
-// Metadata DOM Elements
+// Metadata & Image DOM Elements
 const trackTitleElem = document.getElementById('track-title');
 const artistNameElem = document.getElementById('artist-name');
+const albumArtElem = document.getElementById('album-art');
 const historyListElem = document.getElementById('history-list');
 
-// REPLACE THIS with your actual Radio API Endpoint URL
+// Placeholder fallback image URL if API doesn't return one
+const DEFAULT_ART = "https://placehold.co/300x300/1e1e2f/ffffff?text=Radio";
+
 const API_URL = "https://demo.azuracast.com/api/nowplaying/1"; 
 
 let isPlaying = false;
-let currentSongTitle = "";
 
-// 1. Audio Control Logic
+// Audio Controls
 playBtn.addEventListener('click', () => {
     if (!isPlaying) {
         audio.load(); 
@@ -40,8 +42,7 @@ volumeSlider.addEventListener('input', (e) => {
     audio.volume = e.target.value;
 });
 
-
-// 2. Metadata & History Logic
+// Fetching Data with Images
 async function fetchMetadata() {
     try {
         const response = await fetch(API_URL);
@@ -49,28 +50,31 @@ async function fetchMetadata() {
         
         const data = await response.json();
         
-        // This structural paths standard mapping matches AzuraCast.
-        // Adjust these paths depending on your specific streaming service API layout
+        // Mapping paths based on standard AzuraCast JSON schemas
         const liveTrack = data.now_playing.song.title;
         const liveArtist = data.now_playing.song.artist;
+        const liveArt = data.now_playing.song.art; // Image URL path key
         const songHistory = data.song_history || [];
 
-        // Update current UI text
+        // Update Text Info
         trackTitleElem.innerText = liveTrack || "Unknown Title";
         artistNameElem.innerText = liveArtist || "Unknown Artist";
 
-        // Update the recently played track history visually
+        // Update Main Album Artwork Image
+        albumArtElem.src = liveArt || DEFAULT_ART;
+
+        // Process History List
         updateHistoryUI(songHistory);
 
     } catch (error) {
         console.error("Failed to fetch stream metadata:", error);
         trackTitleElem.innerText = "Live Broadcast Stream";
         artistNameElem.innerText = "";
+        albumArtElem.src = DEFAULT_ART;
     }
 }
 
 function updateHistoryUI(historyArray) {
-    // Clear out old data
     historyListElem.innerHTML = '';
 
     if (historyArray.length === 0) {
@@ -78,19 +82,38 @@ function updateHistoryUI(historyArray) {
         return;
     }
 
-    // Loop through the historical tracks provided by your API data array
     historyArray.forEach(item => {
         const li = document.createElement('li');
-        const title = item.song.title;
-        const artist = item.song.artist;
         
-        li.innerText = `${artist} - ${title}`;
+        // Create small thumbnail image element
+        const img = document.createElement('img');
+        img.classList.add('history-art');
+        img.src = item.song.art || DEFAULT_ART;
+        img.alt = "Track Art";
+
+        // Create metadata layout container wrapper
+        const detailsDiv = document.createElement('div');
+        detailsDiv.classList.add('history-details');
+
+        const titleSpan = document.createElement('span');
+        titleSpan.classList.add('history-title');
+        titleSpan.innerText = item.song.title;
+
+        const artistSpan = document.createElement('span');
+        artistSpan.classList.add('history-artist');
+        artistSpan.innerText = item.song.artist;
+
+        // Assembly
+        detailsDiv.appendChild(titleSpan);
+        detailsDiv.appendChild(artistSpan);
+        
+        li.appendChild(img);
+        li.appendChild(detailsDiv);
+        
         historyListElem.appendChild(li);
     });
 }
 
-// Fetch metadata instantly on page load
+// Init
 fetchMetadata();
-
-// Continuously poll the API server for track changes every 15 seconds
 setInterval(fetchMetadata, 15000);
