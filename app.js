@@ -1,119 +1,155 @@
 const audio = document.getElementById('radio-audio');
-const playBtn = document.getElementById('play-btn');
+const heroPlayBtn = document.getElementById('hero-play-btn');
+const barPlayBtn = document.getElementById('bar-play-btn');
 const volumeSlider = document.getElementById('volume-slider');
-const statusText = document.getElementById('status');
 
-// Metadata & Image DOM Elements
-const trackTitleElem = document.getElementById('track-title');
-const artistNameElem = document.getElementById('artist-name');
-const albumArtElem = document.getElementById('album-art');
-const historyListElem = document.getElementById('history-list');
+// Metadata DOM elements
+const trackTitle = document.getElementById('track-title');
+const artistName = document.getElementById('artist-name');
+const albumArt = document.getElementById('album-art');
 
-// Placeholder fallback image URL if API doesn't return one
-const DEFAULT_ART = "https://placehold.co/300x300/1e1e2f/ffffff?text=Radio";
+const barTrackTitle = document.getElementById('bar-track-title');
+const barArtistName = document.getElementById('bar-artist-name');
+const barAlbumArt = document.getElementById('bar-album-art');
 
+const historyGrid = document.getElementById('history-grid');
+
+// Modal Elements
+const historyModal = document.getElementById('history-modal');
+const viewAllBtn = document.getElementById('view-all-btn');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const fullHistoryList = document.getElementById('full-history-list');
+
+const DEFAULT_ART = "https://placehold.co/400x400/999/fff?text=WJVL";
 const API_URL = "https://demo.azuracast.com/api/nowplaying/1"; 
 
 let isPlaying = false;
 
-// Audio Controls
-playBtn.addEventListener('click', () => {
+// Universal sync playback toggler
+function togglePlayback() {
     if (!isPlaying) {
-        audio.load(); 
+        audio.load();
         audio.play()
             .then(() => {
                 isPlaying = true;
-                playBtn.innerText = '⏸ Pause';
-                statusText.innerText = 'Status: Live 🔴';
+                updatePlayButtons('⏸');
             })
-            .catch(error => {
-                console.error("Playback failed:", error);
-                statusText.innerText = 'Error loading stream.';
-            });
+            .catch(err => console.log("Stream play blocked or failed: ", err));
     } else {
         audio.pause();
         isPlaying = false;
-        playBtn.innerText = '▶ Play';
-        statusText.innerText = 'Status: Paused';
+        updatePlayButtons('▶');
     }
+}
+
+function updatePlayButtons(icon) {
+    heroPlayBtn.innerText = icon;
+    barPlayBtn.innerText = icon;
+    if(isPlaying) {
+        heroPlayBtn.classList.add('playing');
+    } else {
+        heroPlayBtn.classList.remove('playing');
+    }
+}
+
+heroPlayBtn.addEventListener('click', togglePlayback);
+barPlayBtn.addEventListener('click', togglePlayback);
+volumeSlider.addEventListener('input', (e) => audio.volume = e.target.value);
+
+// Modal Show/Hide
+viewAllBtn.addEventListener('click', () => historyModal.style.display = 'block');
+closeModalBtn.addEventListener('click', () => historyModal.style.display = 'none');
+window.addEventListener('click', (e) => {
+    if (e.target === historyModal) historyModal.style.display = 'none';
 });
 
-volumeSlider.addEventListener('input', (e) => {
-    audio.volume = e.target.value;
-});
-
-// Fetching Data with Images
+// Fetch API metadata
 async function fetchMetadata() {
     try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Network response error');
-        
+        if (!response.ok) throw new Error("Data missing");
         const data = await response.json();
-        
-        // Mapping paths based on standard AzuraCast JSON schemas
-        const liveTrack = data.now_playing.song.title;
-        const liveArtist = data.now_playing.song.artist;
-        const liveArt = data.now_playing.song.art; // Image URL path key
-        const songHistory = data.song_history || [];
 
-        // Update Text Info
-        trackTitleElem.innerText = liveTrack || "Unknown Title";
-        artistNameElem.innerText = liveArtist || "Unknown Artist";
+        const current = data.now_playing.song;
+        const history = data.song_history || [];
 
-        // Update Main Album Artwork Image
-        albumArtElem.src = liveArt || DEFAULT_ART;
+        // Update main and bottom layouts concurrently
+        const titleText = current.title || "All The Best Country 99.9 WJVL";
+        const artistText = current.artist || "WJVL";
+        const artUrl = current.art || DEFAULT_ART;
 
-        // Process History List
-        updateHistoryUI(songHistory);
+        trackTitle.innerText = titleText;
+        artistName.innerText = artistText;
+        albumArt.src = artUrl;
+
+        barTrackTitle.innerText = titleText;
+        barArtistName.innerText = artistText;
+        barAlbumArt.src = artUrl;
+
+        // Populate grids and listings
+        renderHistoryGrid(history);
+        renderFullHistoryModal(history);
 
     } catch (error) {
-        console.error("Failed to fetch stream metadata:", error);
-        trackTitleElem.innerText = "Live Broadcast Stream";
-        artistNameElem.innerText = "";
-        albumArtElem.src = DEFAULT_ART;
+        console.error("Error reading api data stream:", error);
     }
 }
 
-function updateHistoryUI(historyArray) {
-    historyListElem.innerHTML = '';
+// Render exactly 5 items cleanly in grid layout
+function renderHistoryGrid(historyArray) {
+    historyGrid.innerHTML = '';
+    
+    // Take up to 5 items max
+    const displayList = historyArray.slice(0, 5);
 
-    if (historyArray.length === 0) {
-        historyListElem.innerHTML = '<li class="empty-history">No history available yet</li>';
-        return;
+    // If API returns fewer items, fill up empty cells to keep styling structure consistent
+    while(displayList.length < 5) {
+        displayList.push({ song: { title: "Song Title", artist: "Artist", art: DEFAULT_ART } });
     }
 
-    historyArray.forEach(item => {
-        const li = document.createElement('li');
-        
-        // Create small thumbnail image element
-        const img = document.createElement('img');
-        img.classList.add('history-art');
-        img.src = item.song.art || DEFAULT_ART;
-        img.alt = "Track Art";
+    displayList.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('grid-item');
 
-        // Create metadata layout container wrapper
-        const detailsDiv = document.createElement('div');
-        detailsDiv.classList.add('history-details');
+        const artWrapper = document.createElement('div');
+        artWrapper.classList.add('grid-art-wrapper');
+
+        const img = document.createElement('img');
+        img.src = item.song.art || DEFAULT_ART;
+        // Fix for missing image URLs returning broken icons
+        img.onerror = function() { this.src = DEFAULT_ART; };
 
         const titleSpan = document.createElement('span');
-        titleSpan.classList.add('history-title');
+        titleSpan.classList.add('grid-title');
         titleSpan.innerText = item.song.title;
 
         const artistSpan = document.createElement('span');
-        artistSpan.classList.add('history-artist');
+        artistSpan.classList.add('grid-artist');
         artistSpan.innerText = item.song.artist;
 
-        // Assembly
-        detailsDiv.appendChild(titleSpan);
-        detailsDiv.appendChild(artistSpan);
-        
-        li.appendChild(img);
-        li.appendChild(detailsDiv);
-        
-        historyListElem.appendChild(li);
+        artWrapper.appendChild(img);
+        itemDiv.appendChild(artWrapper);
+        itemDiv.appendChild(titleSpan);
+        itemDiv.appendChild(artistSpan);
+
+        historyGrid.appendChild(itemDiv);
     });
 }
 
-// Init
+// Render the remaining history inside modal overlay menu drawer
+function renderFullHistoryModal(historyArray) {
+    fullHistoryList.innerHTML = '';
+    if(historyArray.length === 0) {
+        fullHistoryList.innerHTML = '<li>No extended history found.</li>';
+        return;
+    }
+    historyArray.forEach(item => {
+        const li = document.createElement('li');
+        li.innerText = `${item.song.artist} — ${item.song.title}`;
+        fullHistoryList.appendChild(li);
+    });
+}
+
+// Polling interval cycle loops
 fetchMetadata();
 setInterval(fetchMetadata, 15000);
